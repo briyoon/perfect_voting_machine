@@ -1,7 +1,14 @@
 import * as React from 'react';
 
-interface BallotProps {
 
+interface BallotQuestionProps{
+    Instructions : String;
+    Question : String;
+    Options : [String];
+}
+
+interface BallotProps {
+    BallotQuestions : [BallotQuestionProps]
 }
 
 const Ballot: React.FunctionComponent<BallotProps> = () => {
