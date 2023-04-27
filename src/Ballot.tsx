@@ -71,7 +71,6 @@ export default function BallotComp() {
   const [ballotData, setBallotData] = useState<Ballot | null>(null);
 
   useEffect(() => {
-    // Fetch JSON data from file path
     fetch('/path/to/json/file.json')
       .then(response => response.json())
       .then(data => setBallotData(data))
