@@ -1,26 +1,80 @@
-import React from 'react';
-import logo from './logo.png'; // Import the logo image
+import React, { useState, useRef, useEffect } from 'react';
+import logo from './Images/logo.png';
+import back_arrow from './Images/go-back.png';
+import { useNavigate } from 'react-router-dom';
 const { ipcRenderer } = window.require('electron');
 
-const Login: React.FC = () => {
-  const [firstName, setFirstName] = React.useState('');
-  const [lastName, setLastName] = React.useState('');
-  const [hash, setHash] = React.useState('');
+
+const GetHash: React.FC = () => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [hash, setHash] = useState('');
+  const [isSubmitFocused, setIsSubmitFocused] = useState(false);
+
+  const firstNameRef = useRef<HTMLInputElement>(null);
+  const lastNameRef = useRef<HTMLInputElement>(null);
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const backButtonRef = useRef<HTMLButtonElement>(null);
+
+  const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setHash(`${firstName}${lastName}`);
-    // ipcRenderer.invoke('hash-data', data).then((result) => {
-    //   setHash(result);
-    //   console.log(`Hash value: ${result}`);
-    // }).catch((error) => {
-    //   console.error(error);
-    // });
   };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      if (event.currentTarget === backButtonRef.current) {
+        handleGoBack();
+      } else if (event.currentTarget === submitButtonRef.current) {
+        handleSubmit(event as unknown as React.FormEvent<HTMLFormElement>);
+      }
+    } else if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      if (event.currentTarget === firstNameRef.current) {
+        lastNameRef.current?.focus();
+      } else if (event.currentTarget === lastNameRef.current) {
+        submitButtonRef.current?.focus();
+      } else if (event.currentTarget === submitButtonRef.current) {
+        backButtonRef.current?.focus();
+      } else if (event.currentTarget === backButtonRef.current) {
+        firstNameRef.current?.focus();
+      }
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      if (event.currentTarget === lastNameRef.current) {
+        firstNameRef.current?.focus();
+      } else if (event.currentTarget === submitButtonRef.current) {
+        lastNameRef.current?.focus();
+      } else if (event.currentTarget === backButtonRef.current) {
+        submitButtonRef.current?.focus();
+      } else if (event.currentTarget === firstNameRef.current) {
+        backButtonRef.current?.focus();
+      }
+    }
+  };
+
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
+  React.useEffect(() => {
+    firstNameRef.current?.focus();
+  }, []);
 
   return (
     <div className="bg-gradient-to-tr from-green-500 to-blue-300 min-h-screen flex items-center justify-center">
-      <img src={logo} alt="Logo" className="absolute bottom-4 right-4 h-16 w-auto"/>
+      <img src={logo} alt="Logo" className="absolute bottom-4 right-4 h-16 w-auto" />
+      <button
+        onClick={handleGoBack}
+        className="absolute top-4 left-4"
+        ref={backButtonRef}
+        onKeyDown={handleKeyDown}
+      >
+        <img src={back_arrow} alt="back_arrow" className="h-16 w-auto" />
+      </button>
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-3xl font-semibold text-center mb-8">Login</h2>
         <form onSubmit={handleSubmit}>
@@ -35,6 +89,8 @@ const Login: React.FC = () => {
               placeholder="Enter your first name"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
+              ref={firstNameRef}
+              onKeyDown={handleKeyDown}
             />
           </div>
           <div className="mb-6">
@@ -48,9 +104,22 @@ const Login: React.FC = () => {
               placeholder="Enter your last name"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
+              ref={lastNameRef}
+              onKeyDown={handleKeyDown}
             />
           </div>
-          <button type="submit" className="w-full text-lg bg-gradient-to-r from-green-500 to-blue-300 text-white font-semibold py-3 px-4 rounded-full focus:outline-none hover:from-green-600 hover:to-blue-400 transition duration-300">
+          <button
+            type="submit"
+            className={`w-full text-lg ${
+              isSubmitFocused
+                ? 'bg-gradient-to-r from-green-600 to-blue-400'
+                : 'bg-gradient-to-r from-green-500 to-blue-300'
+            } text-white font-semibold py-3 px-4 rounded-full focus:outline-none transition duration-300`}
+            ref={submitButtonRef}
+            onKeyDown={handleKeyDown}
+            onFocus={() => setIsSubmitFocused(true)}
+            onBlur={() => setIsSubmitFocused(false)}
+          >
             Submit
           </button>
         </form>
@@ -63,6 +132,6 @@ const Login: React.FC = () => {
       </div>
     </div>
   );
-};
+        }
 
-export default Login;
+export default GetHash;
