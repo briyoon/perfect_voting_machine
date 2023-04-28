@@ -2,76 +2,13 @@ import * as React from 'react';
 import { useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 
-
-
-interface Candidate {
-  name: string;
-  party: string;
-}
-
-interface ContestChoice {
-  candidate: Candidate;
-}
-
-interface Contest {
-  contestName: string;
-  contestVoteFor: number;
-  contestWriteIn: boolean;
-  contestChoices: ContestChoice[];
-}
-
-interface PropositionChoice {
-  option: string;
-}
-
-interface Proposition {
-  propName: string;
-  propDescription: string;
-  propChoices: PropositionChoice[];
-}
-
-interface RankedChoice {
-  rankedChoiceName: string;
-  rankedChoiceVoteFor: number;
-  rankedChoiceWriteIn: boolean;
-  rankedChoices: ContestChoice[];
-}
-
-interface Approval {
-  approvalName: string;
-  approvalChoices: ContestChoice[];
-}
-
-interface Item {
-  contest?: Contest;
-  proposition?: Proposition;
-  rankedChoice?: RankedChoice;
-  approval?: Approval;
-}
-
-interface Section {
-  sectionName: string;
-  items: Item[];
-}
-
-interface Header {
-  date: string;
-  title: string;
-  instructions: string;
-}
-
-interface Ballot {
-  header: Header;
-  sections: Section[];
-}
-
 export default function BallotComp() {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
   const [ballotData, setBallotData] = useState<Ballot | null>(null);
 
   useEffect(() => {
-    fetch('/path/to/json/file.json')
+    fetch('')
       .then(response => response.json())
       .then(data => setBallotData(data))
       .catch(error => console.error(error));
