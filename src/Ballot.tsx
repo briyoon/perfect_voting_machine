@@ -44,9 +44,11 @@ export default function BallotComp() {
   const handleNext = () => {
     if (currentItemIndex < currentSection.items.length - 1) {
       setCurrentItemIndex(currentItemIndex + 1);
+      handleAddChoice
     } else if (currentSectionIndex < ballotData.sections.length - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
       setCurrentItemIndex(0);
+      handleAddChoice
     }
   };
   const handlePrev = () => {
@@ -109,7 +111,7 @@ export default function BallotComp() {
             <button className="bg-white border border-gray-300 rounded-full shadow-md w-40 h-[12%] m-4 text-2xl flex justify-center items-center transition duration-300 transform hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mx-4" onClick={handlePrev} disabled={currentSectionIndex === 0 && currentItemIndex === 0}>
               Previous
             </button>
-            <button onClick = {handleAddChoice} className="bg-white border border-gray-300 rounded-full shadow-md w-40 h-[12%] m-4 text-2xl flex justify-center items-center transition duration-300 transform hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mx-4" onClick={handleNext} disabled={currentSectionIndex === ballotData.sections.length - 1 && currentItemIndex === currentSection.items.length - 1}>
+            <button className="bg-white border border-gray-300 rounded-full shadow-md w-40 h-[12%] m-4 text-2xl flex justify-center items-center transition duration-300 transform hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mx-4" onClick={handleNext} disabled={currentSectionIndex === ballotData.sections.length - 1 && currentItemIndex === currentSection.items.length - 1}>
               Next
             </button>
           </div>
