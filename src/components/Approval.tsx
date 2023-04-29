@@ -1,11 +1,16 @@
 import type { FunctionComponent } from "react";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { BallotContext } from "@/Ballot";
 
 interface ApprovalProps {
     approval: Approval
 }
 
 const Approval: FunctionComponent<ApprovalProps> = ({ approval }) => {
+
+    const { contextChoices: choices, setContextChoices: setChoices } = useContext(BallotContext);
+
+
     return(
         <>
             <h2 className="text-2xl font-bold mb-4">{approval.approvalName}</h2>
