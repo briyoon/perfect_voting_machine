@@ -8,7 +8,12 @@ interface ApprovalProps {
 
 const Approval: FunctionComponent<ApprovalProps> = ({ approval }) => {
 
-    const { contextChoices: choices, setContextChoices: setChoices } = useContext(BallotContext);
+    const { currentChoice, setCurrentChoice } = useContext(BallotContext);
+    
+    const handleCurrChoice = (choice: any) => {
+        console.log(choice);
+        setCurrentChoice(choice);
+    }
 
 
     return(
@@ -16,8 +21,9 @@ const Approval: FunctionComponent<ApprovalProps> = ({ approval }) => {
             <h2 className="text-2xl font-bold mb-4">{approval.approvalName}</h2>
             <ul>
                 {approval.approvalChoices.map((choice, index) => (
-                    <li key={index} className="mb-2">
-                        <span>{choice.candidate.name} - {choice.candidate.party}</span>
+                    <li onClick = {() => handleCurrChoice(choice.candidate.name)} key={index} className="mb-2">
+                        <input type="radio" name={`approval_${index}`} value={index} className="form-radio h-4 w-4 text-indigo-600" />
+                        <span> {choice.candidate.name} - {choice.candidate.party}</span>
                     </li>
                     ))}
             </ul>

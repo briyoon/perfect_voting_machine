@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Contest from './components/Contest';
 import Proposition from './components/Proposition';
@@ -9,21 +9,32 @@ import Approval from './components/Approval';
 
 type BallotContextType = {
   contextChoices: any [],
+  currentChoice: any,
   setContextChoices: React.Dispatch<React.SetStateAction<any[]>>,
+  setCurrentChoice: React.Dispatch<React.SetStateAction<any[]>>
 }
 
 export const BallotContext = React.createContext<BallotContextType>({
   contextChoices: [],
-  setContextChoices: (choice) => {},
+  currentChoice: null,
+  setContextChoices: (prevState) => {},
+  setCurrentChoice: (currChoice) => {},
 });
 
 export default function BallotComp() {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
   const [ballotData, setBallotData] = useState<Ballot | null>(null);
-  const [choices, setChoices] = useState<any[]>([]);
-  const [contextChoices, setContextChoices] = useState<any[]>([])
+  const [currentChoice, setCurrentChoice] = useState("hello");
+  const [contextChoices, setContextChoices] = useState<any[]>([]);
 
+  const handleCurrChoice = (currChoice: any) =>  {
+    console.log(currChoice);
+    setCurrentChoice(currChoice);
+  }
+
+  
+  
   useEffect(() => {
     const fetchBallot = async () => {
       const response = await fetch('src/assets/example_ballot.json')
@@ -41,14 +52,16 @@ export default function BallotComp() {
   const currentSection = ballotData.sections[currentSectionIndex];
   const currentItem = currentSection.items[currentItemIndex];
 
+  
+
   const handleNext = () => {
     if (currentItemIndex < currentSection.items.length - 1) {
       setCurrentItemIndex(currentItemIndex + 1);
-      handleAddChoice
+      handleAddChoice();
     } else if (currentSectionIndex < ballotData.sections.length - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
       setCurrentItemIndex(0);
-      handleAddChoice
+      handleAddChoice();
     }
   };
   const handlePrev = () => {
@@ -78,20 +91,25 @@ export default function BallotComp() {
     }
   }
 
-  const handleAddChoice = (choice: any) => {
-    setContextChoices((prevState) => {
-          if(contextChoices.indexOf(choice) === -1){
-            console.log([...prevState, choice])
-            return [...prevState, choice]
+
+
+  const handleAddChoice = () => {
+    setContextChoices(() => {
+          if(!contextChoices[currentItemIndex]){
+            console.log(currentChoice);
+            console.log([...contextChoices, currentChoice]);
+            return [...contextChoices, currentChoice];
           } else {
-            const index = prevState.indexOf(choice);
-            prevState[index] = choice;
-            console.log([...prevState])
-            return [...prevState];
+            contextChoices[currentItemIndex] = currentChoice;
+            console.log(currentChoice);
+            console.log([...contextChoices]);
+            return [...contextChoices];
           }
         }
     )
   };
+
+ 
 
   return (
       <div className="bg-gradient-to-tr from-green-500 to-blue-300 min-h-screen flex items-center justify-center">
@@ -103,7 +121,7 @@ export default function BallotComp() {
           </div>
           <hr className="border-t-2 border-gray-200 mb-4 mx-auto w-2/3" />
           <div className="flex-grow w-full h-full flex flex-col items-center">
-          <BallotContext.Provider value={{ contextChoices, setContextChoices: handleAddChoice}}>
+          <BallotContext.Provider value={{ contextChoices, currentChoice, setContextChoices: handleAddChoice, setCurrentChoice: handleCurrChoice}}>
             {renderCurrentItem()}
           </BallotContext.Provider>  
           </div>
@@ -119,3 +137,5 @@ export default function BallotComp() {
       </div>
   );
 }
+
+
