@@ -8,9 +8,9 @@ import Approval from './components/Approval';
 import { encryptData } from './utils/crypto';
 
 type BallotContextType = {
-<<<<<<< HEAD
   contextChoices: any [],
   currentChoice: any,
+  encryptedContextChoices: string,
   setContextChoices: React.Dispatch<React.SetStateAction<any[]>>,
   setCurrentChoice: React.Dispatch<React.SetStateAction<any[]>>
 }
@@ -18,33 +18,20 @@ type BallotContextType = {
 export const BallotContext = React.createContext<BallotContextType>({
   contextChoices: [],
   currentChoice: null,
+  encryptedContextChoices: "",
   setContextChoices: (prevState) => {},
   setCurrentChoice: (currChoice) => {},
-=======
-  contextChoices: any[],
-  encryptedContextChoices: string,
-  setContextChoices: React.Dispatch<React.SetStateAction<any[]>>,
-};
-
-export const BallotContext = React.createContext<BallotContextType>({
-  contextChoices: [],
-  encryptedContextChoices: '',
-  setContextChoices: (choice) => {},
->>>>>>> f60a616bc05e4c057fe521e4753a36aac90dd659
 });
+
 
 export default function BallotComp() {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
   const [ballotData, setBallotData] = useState<Ballot | null>(null);
-<<<<<<< HEAD
   const [currentChoice, setCurrentChoice] = useState("hello");
   const [contextChoices, setContextChoices] = useState<any[]>([]);
-=======
   const [choices, setChoices] = useState<any[]>([]);
-  const [contextChoices, setContextChoices] = useState<any[]>([]);
   const [encryptedContextChoices, setEncryptedContextChoices] = useState<string>('');
->>>>>>> f60a616bc05e4c057fe521e4753a36aac90dd659
 
   const handleCurrChoice = (currChoice: any) =>  {
     console.log(currChoice);
@@ -75,19 +62,11 @@ export default function BallotComp() {
   const handleNext = () => {
     if (currentItemIndex < currentSection.items.length - 1) {
       setCurrentItemIndex(currentItemIndex + 1);
-<<<<<<< HEAD
       handleAddChoice();
     } else if (currentSectionIndex < ballotData.sections.length - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
       setCurrentItemIndex(0);
       handleAddChoice();
-=======
-      handleAddChoice;
-    } else if (currentSectionIndex < ballotData.sections.length - 1) {
-      setCurrentSectionIndex(currentSectionIndex + 1);
-      setCurrentItemIndex(0);
-      handleAddChoice;
->>>>>>> f60a616bc05e4c057fe521e4753a36aac90dd659
     }
   };
 
@@ -114,7 +93,6 @@ export default function BallotComp() {
     }
   };
 
-<<<<<<< HEAD
 
 
   const handleAddChoice = () => {
@@ -131,7 +109,6 @@ export default function BallotComp() {
           }
         }
     )
-=======
   const handleAddChoice = (choice: any) => {
     setContextChoices((prevState) => {
       let updatedState;
@@ -146,13 +123,11 @@ export default function BallotComp() {
       setEncryptedContextChoices(encryptedData);
       return updatedState;
     });
->>>>>>> f60a616bc05e4c057fe521e4753a36aac90dd659
   };
 
  
 
   return (
-<<<<<<< HEAD
       <div className="bg-gradient-to-tr from-green-500 to-blue-300 min-h-screen flex items-center justify-center">
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">
           <div className="mb-4">
@@ -162,19 +137,7 @@ export default function BallotComp() {
           </div>
           <hr className="border-t-2 border-gray-200 mb-4 mx-auto w-2/3" />
           <div className="flex-grow w-full h-full flex flex-col items-center">
-          <BallotContext.Provider value={{ contextChoices, currentChoice, setContextChoices: handleAddChoice, setCurrentChoice: handleCurrChoice}}>
-=======
-    <div className="bg-gradient-to-tr from-green-500 to-blue-300 min-h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">
-        <div className="mb-4">
-          <p className="font-bold text-black text-center text-2xl">{ballotData.header.title}</p>
-          <p className="text-black text-center text-lg">{`Current section: ${currentSection.sectionName}`}</p>
-          <p className="text-black text-center text-lg">{ballotData.header.instructions}</p>
-        </div>
-        <hr className="border-t-2 border-gray-200 mb-4 mx-auto w-2/3" />
-        <div className="flex-grow w-full h-full flex flex-col items-center">
-          <BallotContext.Provider value={{ contextChoices, encryptedContextChoices, setContextChoices: handleAddChoice }}>
->>>>>>> f60a616bc05e4c057fe521e4753a36aac90dd659
+          <BallotContext.Provider value={{ contextChoices, currentChoice, encryptedContextChoices, setContextChoices: handleAddChoice, setCurrentChoice: handleCurrChoice}}>
             {renderCurrentItem()}
           </BallotContext.Provider>
         </div>
@@ -189,6 +152,5 @@ export default function BallotComp() {
       </div>
     </div>
   );
+  }
 }
-
-
