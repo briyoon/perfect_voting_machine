@@ -30,7 +30,6 @@ export default function BallotComp() {
   const [ballotData, setBallotData] = useState<Ballot | null>(null);
   const [currentChoice, setCurrentChoice] = useState("hello");
   const [contextChoices, setContextChoices] = useState<any[]>([]);
-  const [choices, setChoices] = useState<any[]>([]);
   const [encryptedContextChoices, setEncryptedContextChoices] = useState<string>('');
 
   const handleCurrChoice = (currChoice: any) =>  {
@@ -109,21 +108,22 @@ export default function BallotComp() {
           }
         }
     )
-  const handleAddChoice = (choice: any) => {
-    setContextChoices((prevState) => {
-      let updatedState;
-      if (contextChoices.indexOf(choice) === -1) {
-        updatedState = [...prevState, choice];
-      } else {
-        const index = prevState.indexOf(choice);
-        prevState[index] = choice;
-        updatedState = [...prevState];
-      }
-      const encryptedData = encryptData(updatedState);
-      setEncryptedContextChoices(encryptedData);
-      return updatedState;
-    });
-  };
+  }
+  // const handleAddChoice = (choice: any) => {
+  //   setContextChoices((prevState) => {
+  //     let updatedState;
+  //     if (contextChoices.indexOf(choice) === -1) {
+  //       updatedState = [...prevState, choice];
+  //     } else {
+  //       const index = prevState.indexOf(choice);
+  //       prevState[index] = choice;
+  //       updatedState = [...prevState];
+  //     }
+  //     const encryptedData = encryptData(updatedState);
+  //     setEncryptedContextChoices(encryptedData);
+  //     return updatedState;
+  //   });
+  // };
 
  
 
@@ -151,6 +151,5 @@ export default function BallotComp() {
         </div>
       </div>
     </div>
-  );
-  }
+  )
 }
