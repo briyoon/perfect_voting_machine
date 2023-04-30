@@ -6,11 +6,12 @@ import Proposition from './components/Proposition';
 import RankedChoice from './components/RankedChoice';
 import Approval from './components/Approval';
 import { encryptData } from './utils/crypto';
+import BallotReview from './components/BallotReview'
 
 type BallotContextType = {
   contextChoices: any [],
   currentChoice: any,
-  encryptedContextChoices: string,
+  encryptedContextChoices: string[],
   setContextChoices: React.Dispatch<React.SetStateAction<any[]>>,
   setCurrentChoice: React.Dispatch<React.SetStateAction<any[]>>
 }
@@ -18,7 +19,7 @@ type BallotContextType = {
 export const BallotContext = React.createContext<BallotContextType>({
   contextChoices: [],
   currentChoice: null,
-  encryptedContextChoices: "",
+  encryptedContextChoices: [],
   setContextChoices: (prevState) => {},
   setCurrentChoice: (currChoice) => {},
 });
@@ -30,7 +31,9 @@ export default function BallotComp() {
   const [ballotData, setBallotData] = useState<Ballot | null>(null);
   const [currentChoice, setCurrentChoice] = useState("hello");
   const [contextChoices, setContextChoices] = useState<any[]>([]);
-  const [encryptedContextChoices, setEncryptedContextChoices] = useState<string>('');
+  const [ballotItems, setBallotItems] = useState<string[]>([])
+  const [encryptedContextChoices, setEncryptedContextChoices] = useState<string[]>([]);
+  var endOfBallot = false;
 
   const handleCurrChoice = (currChoice: any) =>  {
     console.log(currChoice);
@@ -66,6 +69,12 @@ export default function BallotComp() {
       setCurrentSectionIndex(currentSectionIndex + 1);
       setCurrentItemIndex(0);
       handleAddChoice();
+    } else {
+      endOfBallot = true;
+      ballotData.header.title = 'Ballot Review'
+      currentSection.sectionName = 'Review'
+      ballotData.header.instructions = 'Please review your ballot and ensure the selections are accurate'
+      renderCurrentItem();
     }
   };
 
@@ -79,19 +88,32 @@ export default function BallotComp() {
   };
 
   const renderCurrentItem = () => {
-    if (currentItem.contest) {
+    if(endOfBallot === true){
+      console.log('Made it to renderCurrentItem()')
+       return <BallotReview ballotItems={ballotItems} ballotChoices={contextChoices} />;
+    } else if (currentItem.contest) {
+      if(ballotItems.indexOf(currentItem.contest.contestName) === -1) handleAddBallotItem(currentItem.contest.contestName);
       return <Contest contest={currentItem.contest} />;
     } else if (currentItem.proposition) {
+      if(ballotItems.indexOf(currentItem.proposition.propName) === -1) handleAddBallotItem(currentItem.proposition.propName);
       return <Proposition proposition={currentItem.proposition} />;
     } else if (currentItem.rankedChoice) {
+      if(ballotItems.indexOf(currentItem.rankedChoice.rankedChoiceName) === -1) handleAddBallotItem(currentItem.rankedChoice.rankedChoiceName);
       return <RankedChoice rankedChoice={currentItem.rankedChoice} />;
     } else if (currentItem.approval) {
+      if(ballotItems.indexOf(currentItem.approval.approvalName) === -1) handleAddBallotItem(currentItem.approval.approvalName);
       return <Approval approval={currentItem.approval} />;
     } else {
       return <div>Invalid item type</div>;
     }
   };
 
+  const handleAddBallotItem = (newItem: string) => {
+    setBallotItems(() => {
+      console.log([...ballotItems, newItem])
+      return [...ballotItems, newItem]
+    })
+  }
 
 
   const handleAddChoice = () => {
@@ -142,10 +164,10 @@ export default function BallotComp() {
           </BallotContext.Provider>
         </div>
         <div className="flex flex-row justify-center items-center mt-4">
-          <button className="bg-white border border-gray-300 rounded-full shadow-md w-40 h-[12%] m-4 text-2xl flex justify-center items-center transition duration-300 transform hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mx-4" onClick={handlePrev} disabled={currentSectionIndex === 0 && currentItemIndex === 0}>
+          <button className="bg-white border border-gray-300 rounded-full shadow-md w-40 h-[12%] m-4 text-2xl flex justify-center items-center transition duration-300 transform hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mx-4" onClick={handlePrev} /*disabled={currentSectionIndex === 0 && currentItemIndex === 0}*/>
             Previous
           </button>
-          <button className="bg-white border border-gray-300 rounded-full shadow-md w-40 h-[12%] m-4 text-2xl flex justify-center items-center transition duration-300 transform hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mx-4" onClick={handleNext} disabled={currentSectionIndex === ballotData.sections.length - 1 && currentItemIndex === currentSection.items.length - 1}>
+          <button className="bg-white border border-gray-300 rounded-full shadow-md w-40 h-[12%] m-4 text-2xl flex justify-center items-center transition duration-300 transform hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mx-4" onClick={handleNext} /*disabled={currentSectionIndex === ballotData.sections.length - 1 && currentItemIndex === currentSection.items.length - 1}*/>
             Next
           </button>
         </div>
