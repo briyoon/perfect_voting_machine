@@ -18,9 +18,15 @@ const GetHash: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setHash(`${firstName}${lastName}`);
+    const newHash = `${firstName}${lastName}`;
+    setHash(newHash);
+    try {
+      await navigator.clipboard.writeText(newHash);
+    } catch (err) {
+      console.error('Failed to copy hash to clipboard:', err);
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -125,8 +131,8 @@ const GetHash: React.FC = () => {
         </form>
         {hash && (
           <div className="mt-6 text-center">
-            <p className="text-gray-700 font-bold text-xl">Hash value:</p>
-            <p className="text-gray-700 text-lg">{hash}</p>
+            <p className="text-gray-500 font-bold text-lg">Your hash value has been successfully copied to the clipboard for future use:</p>
+            <p className="text-gray-700 text-xl">{hash}</p>
           </div>
         )}
       </div>
