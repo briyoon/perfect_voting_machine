@@ -9,7 +9,7 @@ interface ApprovalProps {
 const Approval: FunctionComponent<ApprovalProps> = ({ approval }) => {
 
     const { currentChoice, setCurrentChoice } = useContext(BallotContext);
-    
+
     const handleCurrChoice = (choice: any) => {
         console.log(choice);
         setCurrentChoice(choice);

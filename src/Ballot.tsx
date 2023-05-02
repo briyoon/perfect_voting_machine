@@ -49,16 +49,6 @@ export default function BallotComp() {
 
     fetchBallot();
 
-    const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.code === 'ArrowRight') handleNext();
-      if (event.code === 'ArrowLeft') handlePrev();
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyPress);
-    };
   }, []);
 
   if (!ballotData) {
@@ -141,6 +131,7 @@ export default function BallotComp() {
     });
   };
 
+
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === "ArrowLeft") {
       handlePrev();
@@ -166,7 +157,7 @@ export default function BallotComp() {
   //     return updatedState;
   //   });
   // };
-  
+
   return (
     <div
       className="bg-gradient-to-tr from-green-500 to-blue-300 min-h-screen flex items-center justify-center"
