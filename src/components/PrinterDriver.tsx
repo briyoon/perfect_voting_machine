@@ -14,6 +14,7 @@ const PrinterDriver: FunctionComponent<PrinterDriverProps> = ({ ballotItems, bal
     // const fileContent = ballotChoices.join('\n'); // join the ballot choices with new lines
     // const file = new Blob([fileContent], {type: 'text/plain'}); // create a Blob with the ballot choices
     const [fileContent, setFileContent] = useState([""]);
+    const tempBallotChoices = ballotChoices;
 
     console.log('Inside BallotReview');
 
@@ -39,13 +40,14 @@ const PrinterDriver: FunctionComponent<PrinterDriverProps> = ({ ballotItems, bal
         }
       };
 
+      //Stores in RAM until ENTER is pressed
       function uploadToFile() {
-        setFileContent(fileContent.concat(ballotChoices.sort(() => Math.random() - 0.5)));
+        setFileContent(fileContent.concat(tempBallotChoices.sort(() => Math.random() - 0.5)));
         //element.download = "ballotData.txt";
         //element.click();
       }
 
-
+      //Once ENTER is pressed it's brought to the system storage
     function downloadFile() {
         const fileUrl = 'ballotData.txt';
         const xhr = new XMLHttpRequest();
@@ -62,7 +64,7 @@ const PrinterDriver: FunctionComponent<PrinterDriverProps> = ({ ballotItems, bal
               element.href = URL.createObjectURL(file);
               element.download = "ballotData.txt";
               for(let i = 0; i < ballotChoices.length; i++){
-                  const textNode = document.createTextNode(ballotChoices[i] + "");
+                  const textNode = document.createTextNode(tempBallotChoices[i] + "");
                   document.body.appendChild(textNode);
               }
               element.click();
@@ -78,13 +80,14 @@ const PrinterDriver: FunctionComponent<PrinterDriverProps> = ({ ballotItems, bal
     const renderItems = () => {
         const items = [];
         for(let i = 0; i < ballotItems.length; i++){
+            const temp = ballotItems[i];
             items.push(
                 <>
-                    <h2 className="text-2xl font-bold mb-4">{ballotItems[i]}</h2>
+                    <h2 className="text-2xl font-bold mb-4">{temp}</h2>
                     <ul>
                         <li key={i} className="mb-2">
                         <label className="inline-flex items-center">
-                            <span className="ml-2">{ballotChoices[i]}</span>
+                            <span className="ml-2">{temp}</span>
                         </label>
                         </li>
                     </ul>
