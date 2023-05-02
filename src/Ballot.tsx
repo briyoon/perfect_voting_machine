@@ -91,7 +91,7 @@ export default function BallotComp() {
   };
 
   const renderCurrentItem = () => {
-    if (endOfBallot === true) {
+    if (currentItemIndex == currentSection.items.length) {
       console.log("Made it to renderCurrentItem()");
       return <BallotReview ballotItems={ballotItems} ballotChoices={contextChoices} />;
     } else if (currentItem.contest) {
