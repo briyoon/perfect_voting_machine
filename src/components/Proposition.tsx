@@ -26,7 +26,7 @@ const Proposition: FunctionComponent<PropositionProps> = ({ proposition }) => {
       event.preventDefault();
       if (focusedIndex < proposition.propChoices.length) {
         const selectedChoiceIndex = focusedIndex;
-        setSelectedOption(proposition.propChoices[selectedChoiceIndex].option);
+        handleCurrChoice(proposition.propChoices[selectedChoiceIndex].option)
       }
     }
   };
@@ -37,8 +37,10 @@ const Proposition: FunctionComponent<PropositionProps> = ({ proposition }) => {
   };
 
   useEffect(() => {
+    console.log(currentChoice)
+    setSelectedOption(currentChoice)
     formRef.current?.focus();
-  }, []);
+  }, [currentChoice]);
 
   return (
     <form onKeyDown={handleKeyDown} ref={formRef} tabIndex={0}>
