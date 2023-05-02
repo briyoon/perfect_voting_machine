@@ -78,7 +78,7 @@ export default function BallotComp() {
       endOfBallot = true;
       ballotData.header.title = 'Ballot Review';
       currentSection.sectionName = 'Review';
-      ballotData.header.instructions = 'Please review your ballot and ensure the selections are accurate';
+      ballotData.header.instructions = 'Please review your ballot and ensure the selections are accurate, press ENTER to confirm your ballot is accurate';
       console.log('Made it to else in handleNext')
       handleAddChoice();
       setCurrentChoice('na');
