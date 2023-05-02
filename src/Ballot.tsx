@@ -29,8 +29,9 @@ export const BallotContext = React.createContext<BallotContextType>({
 export default function BallotComp() {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
+  const [currentContextIndex, setCurrentContextIndex] = useState(0);
   const [ballotData, setBallotData] = useState<Ballot | null>(null);
-  const [currentChoice, setCurrentChoice] = useState("hello");
+  const [currentChoice, setCurrentChoice] = useState("na");
   const [contextChoices, setContextChoices] = useState<any[]>([]);
   const [ballotItems, setBallotItems] = useState<string[]>([]);
   const [encryptedContextChoices, setEncryptedContextChoices] = useState<string[]>([]);
@@ -64,9 +65,11 @@ export default function BallotComp() {
   const handleNext = () => {
     if (currentItemIndex < currentSection.items.length - 1) {
       setCurrentItemIndex(currentItemIndex + 1);
+      setCurrentContextIndex(currentContextIndex + 1);
       handleAddChoice();
     } else if (currentSectionIndex < ballotData.sections.length - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
+      setCurrentContextIndex(currentContextIndex + 1);
       setCurrentItemIndex(0);
       handleAddChoice();
     } else {
@@ -84,9 +87,11 @@ export default function BallotComp() {
   const handlePrev = () => {
     if (currentItemIndex > 0) {
       setCurrentItemIndex(currentItemIndex - 1);
+      setCurrentContextIndex(currentContextIndex - 1);
     } else if (currentSectionIndex > 0) {
       setCurrentSectionIndex(currentSectionIndex - 1);
       setCurrentItemIndex(ballotData.sections[currentSectionIndex - 1].items.length - 1);
+      setCurrentContextIndex(currentContextIndex - 1);
     }
   };
 
@@ -126,12 +131,12 @@ export default function BallotComp() {
 
   const handleAddChoice = () => {
       setContextChoices(() => {
-      if (!contextChoices[currentItemIndex]) {
+      if (!contextChoices[currentContextIndex]) {
               console.log(currentChoice);
               console.log([...contextChoices, currentChoice]);
               return [...contextChoices, currentChoice];
             } else {
-              contextChoices[currentItemIndex] = currentChoice;
+              contextChoices[currentContextIndex] = currentChoice;
               console.log(currentChoice);
               console.log([...contextChoices]);
               return [...contextChoices];
