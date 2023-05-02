@@ -6,11 +6,12 @@ import Proposition from './components/Proposition';
 import RankedChoice from './components/RankedChoice';
 import Approval from './components/Approval';
 import { encryptData } from './utils/crypto';
-import BallotReview from './components/BallotReview';
+import PrinterDriver from './components/PrinterDriver';
 import logo from './Images/logo.png';
+import {getDataFromFile} from './InputParser'
 
 type BallotContextType = {
-  contextChoices: any[],
+  contextChoices: string[],
   currentChoice: any,
   encryptedContextChoices: string[],
   setContextChoices: React.Dispatch<React.SetStateAction<any[]>>,
@@ -29,9 +30,10 @@ export const BallotContext = React.createContext<BallotContextType>({
 export default function BallotComp() {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
+  const [currentContextIndex, setCurrentContextIndex] = useState(0);
   const [ballotData, setBallotData] = useState<Ballot | null>(null);
-  const [currentChoice, setCurrentChoice] = useState("");
-  const [contextChoices, setContextChoices] = useState<any[]>([]);
+  const [currentChoice, setCurrentChoice] = useState("na");
+  const [contextChoices, setContextChoices] = useState<string[]>([]);
   const [ballotItems, setBallotItems] = useState<string[]>([]);
   const [encryptedContextChoices, setEncryptedContextChoices] = useState<string[]>([]);
   var endOfBallot = false;
@@ -43,12 +45,13 @@ export default function BallotComp() {
 
   useEffect(() => {
     const fetchBallot = async () => {
-      const response = await fetch('src/assets/example_ballot.json');
+      const response = await getDataFromFile();
       const data = await response.json();
       setBallotData(data);
     };
 
-    fetchBallot();
+    fetchBallot()
+
   }, []);
 
   if (!ballotData) {
@@ -61,18 +64,23 @@ export default function BallotComp() {
   const handleNext = () => {
     if (currentItemIndex < currentSection.items.length - 1) {
       setCurrentItemIndex(currentItemIndex + 1);
+      setCurrentContextIndex(currentContextIndex + 1);
       handleAddChoice();
+      setCurrentChoice('na');
     } else if (currentSectionIndex < ballotData.sections.length - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
+      setCurrentContextIndex(currentContextIndex + 1);
       setCurrentItemIndex(0);
       handleAddChoice();
+      setCurrentChoice('na');
     } else {
       endOfBallot = true;
       ballotData.header.title = 'Ballot Review';
       currentSection.sectionName = 'Review';
-      ballotData.header.instructions = 'Please review your ballot and ensure the selections are accurate';
+      ballotData.header.instructions = 'Please review your ballot and ensure the selections are accurate, press ENTER to confirm your ballot is accurate';
       console.log('Made it to else in handleNext')
       handleAddChoice();
+      setCurrentChoice('na');
       setCurrentItemIndex(currentItemIndex + 1);
       //renderCurrentItem();
     }
@@ -81,16 +89,18 @@ export default function BallotComp() {
   const handlePrev = () => {
     if (currentItemIndex > 0) {
       setCurrentItemIndex(currentItemIndex - 1);
+      setCurrentContextIndex(currentContextIndex - 1);
     } else if (currentSectionIndex > 0) {
       setCurrentSectionIndex(currentSectionIndex - 1);
       setCurrentItemIndex(ballotData.sections[currentSectionIndex - 1].items.length - 1);
+      setCurrentContextIndex(currentContextIndex - 1);
     }
   };
 
   const renderCurrentItem = () => {
-    if (endOfBallot === true) {
+    if (currentItemIndex == currentSection.items.length) {
       console.log("Made it to renderCurrentItem()");
-      return <BallotReview ballotItems={ballotItems} ballotChoices={contextChoices} />;
+      return <PrinterDriver ballotItems={ballotItems} ballotChoices={contextChoices} />;
     } else if (currentItem.contest) {
       if (ballotItems.indexOf(currentItem.contest.contestName) === -1)
         handleAddBallotItem(currentItem.contest.contestName);
@@ -123,16 +133,16 @@ export default function BallotComp() {
 
   const handleAddChoice = () => {
       setContextChoices(() => {
-      if (!contextChoices[currentItemIndex]) {
-        console.log(currentChoice);
-        console.log([...contextChoices, currentChoice]);
-        return [...contextChoices, currentChoice];
-      } else {
-        contextChoices[currentItemIndex] = currentChoice;
-        console.log(currentChoice);
-        console.log([...contextChoices]);
-        return [...contextChoices];
-      }
+      if (!contextChoices[currentContextIndex] && currentChoice != 'na') {
+              console.log(currentChoice);
+              console.log([...contextChoices, currentChoice]);
+              return [...contextChoices, currentChoice];
+            } else {
+              contextChoices[currentContextIndex] = currentChoice;
+              console.log(currentChoice);
+              console.log([...contextChoices]);
+              return contextChoices;
+            }
     });
   };
 

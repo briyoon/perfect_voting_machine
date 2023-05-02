@@ -2,14 +2,24 @@ import * as React from 'react';
 import type { FunctionComponent } from "react";
 import { useContext, useState } from "react";
 
-interface BallotReviewProps {
+interface PrinterDriverProps {
     ballotItems: string[],
     ballotChoices: string[]
 }
 
-const BallotReview: FunctionComponent<BallotReviewProps> = ({ ballotItems, ballotChoices }) => {
+const PrinterDriver: FunctionComponent<PrinterDriverProps> = ({ ballotItems, ballotChoices }) => {
 
-    console.log('Inside BallotReview')
+    console.log('Inside BallotReview');
+
+    const handleKeyPress = (event: React.KeyboardEvent) => {
+        if (event.key === "Enter") {
+          console.log('CONFIRMED');
+          event.preventDefault();
+        } else if (event.key === "Enter") {
+          console.log('CONFIRMED');
+          event.preventDefault();
+        }
+      };
 
     const renderItems = () => {
         const items = [];
@@ -20,7 +30,6 @@ const BallotReview: FunctionComponent<BallotReviewProps> = ({ ballotItems, ballo
                     <ul>
                         <li key={i} className="mb-2">
                         <label className="inline-flex items-center">
-                            <input type="radio" name="contest" value={i} className="form-radio h-4 w-4 text-indigo-600" />
                             <span className="ml-2">{ballotChoices[i]}</span>
                         </label>
                         </li>
@@ -33,7 +42,7 @@ const BallotReview: FunctionComponent<BallotReviewProps> = ({ ballotItems, ballo
 
     return (
         <>
-            <div className="bg-gradient-to-tr from-green-500 to-blue-300 min-h-screen flex items-center justify-center">
+            <div className="bg-gradient-to-tr from-green-500 to-blue-300 min-h-screen flex items-center justify-center" tabIndex={0} onKeyDown={handleKeyPress}>
                 <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">
                     <div className="mb-4">
                         <p className="font-bold text-black text-center text-2xl">Ballot Summary</p>
@@ -48,4 +57,4 @@ const BallotReview: FunctionComponent<BallotReviewProps> = ({ ballotItems, ballo
     );
 }
 
-export default BallotReview;
+export default PrinterDriver;

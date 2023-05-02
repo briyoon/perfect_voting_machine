@@ -31,13 +31,12 @@ const Proposition: FunctionComponent<PropositionProps> = ({ proposition }) => {
     }
   };
 
-  const handleCurrChoice = (choice: any) => {
+  const handleCurrChoice = (choice: string) => {
     setSelectedOption(choice);
     setCurrentChoice(choice);
   };
 
   useEffect(() => {
-    setSelectedOption(selectedOption)
     formRef.current?.focus();
   }, []);
 
