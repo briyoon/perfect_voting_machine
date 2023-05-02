@@ -66,13 +66,13 @@ export default function BallotComp() {
       setCurrentItemIndex(currentItemIndex + 1);
       setCurrentContextIndex(currentContextIndex + 1);
       handleAddChoice();
-      //setCurrentChoice('na');
+      setCurrentChoice('na');
     } else if (currentSectionIndex < ballotData.sections.length - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
       setCurrentContextIndex(currentContextIndex + 1);
       setCurrentItemIndex(0);
       handleAddChoice();
-      //setCurrentChoice('na');
+      setCurrentChoice('na');
     } else {
       endOfBallot = true;
       ballotData.header.title = 'Ballot Review';
@@ -136,11 +136,13 @@ export default function BallotComp() {
       if (!contextChoices[currentContextIndex] && currentChoice != 'na') {
               console.log(currentChoice);
               console.log([...contextChoices, currentChoice]);
+              setCurrentChoice('na');
               return [...contextChoices, currentChoice];
             } else {
               contextChoices[currentContextIndex] = currentChoice;
               console.log(currentChoice);
               console.log([...contextChoices]);
+              setCurrentChoice('na');
               return contextChoices;
             }
     });
