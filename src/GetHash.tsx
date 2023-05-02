@@ -63,7 +63,7 @@ const GetHash: React.FC = () => {
   };
 
   const handleGoBack = () => {
-    navigate(-1);
+    navigate(-2);
   };
 
   React.useEffect(() => {

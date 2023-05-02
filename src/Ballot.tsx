@@ -48,7 +48,6 @@ export default function BallotComp() {
     };
 
     fetchBallot();
-
   }, []);
 
   if (!ballotData) {
