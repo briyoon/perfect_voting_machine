@@ -6,7 +6,7 @@ import Proposition from './components/Proposition';
 import RankedChoice from './components/RankedChoice';
 import Approval from './components/Approval';
 import { encryptData } from './utils/crypto';
-import BallotReview from './components/BallotReview';
+import PrinterDriver from './components/PrinterDriver';
 import logo from './Images/logo.png';
 
 type BallotContextType = {
@@ -36,7 +36,6 @@ export default function BallotComp() {
   const [ballotItems, setBallotItems] = useState<string[]>([]);
   const [encryptedContextChoices, setEncryptedContextChoices] = useState<string[]>([]);
   var endOfBallot = false;
-  const [tempCurrChoice, setTempCurrChoice] = useState("");
 
   const handleCurrChoice = (currChoice: any) =>  {
     console.log(currChoice);
@@ -102,7 +101,7 @@ export default function BallotComp() {
   const renderCurrentItem = () => {
     if (currentItemIndex == currentSection.items.length) {
       console.log("Made it to renderCurrentItem()");
-      return <BallotReview ballotItems={ballotItems} ballotChoices={contextChoices} />;
+      return <PrinterDriver ballotItems={ballotItems} ballotChoices={contextChoices} />;
     } else if (currentItem.contest) {
       if (ballotItems.indexOf(currentItem.contest.contestName) === -1)
         handleAddBallotItem(currentItem.contest.contestName);

@@ -2,12 +2,12 @@ import * as React from 'react';
 import type { FunctionComponent } from "react";
 import { useContext, useState } from "react";
 
-interface BallotReviewProps {
+interface PrinterDriverProps {
     ballotItems: string[],
     ballotChoices: string[]
 }
 
-const BallotReview: FunctionComponent<BallotReviewProps> = ({ ballotItems, ballotChoices }) => {
+const PrinterDriver: FunctionComponent<PrinterDriverProps> = ({ ballotItems, ballotChoices }) => {
 
     console.log('Inside BallotReview')
 
@@ -48,4 +48,4 @@ const BallotReview: FunctionComponent<BallotReviewProps> = ({ ballotItems, ballo
     );
 }
 
-export default BallotReview;
+export default PrinterDriver;
