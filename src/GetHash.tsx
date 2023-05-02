@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import logo from './Images/logo.png';
 import back_arrow from './Images/go-back.png';
 import { useNavigate } from 'react-router-dom';
+import crypto from 'crypto';
 const { ipcRenderer } = window.require('electron');
 
 
@@ -20,10 +21,11 @@ const GetHash: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const newHash = `${firstName}${lastName}`;
-    setHash(newHash);
+    const shasum = crypto.createHash('sha1')
+    const hash = shasum.update(firstName + lastName).digest('hex');
+    setHash(hash);
     try {
-      await navigator.clipboard.writeText(newHash);
+      await navigator.clipboard.writeText(hash);
     } catch (err) {
       console.error('Failed to copy hash to clipboard:', err);
     }
@@ -132,7 +134,7 @@ const GetHash: React.FC = () => {
         {hash && (
           <div className="mt-6 text-center">
             <p className="text-gray-500 font-bold text-lg">Your hash value has been successfully copied to the clipboard for future use:</p>
-            <p className="text-gray-700 text-xl">{hash}</p>
+            <p className="text-gray-700 text-lg">{hash}</p>
           </div>
         )}
       </div>
