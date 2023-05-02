@@ -10,7 +10,7 @@ import BallotReview from './components/BallotReview';
 import logo from './Images/logo.png';
 
 type BallotContextType = {
-  contextChoices: any[],
+  contextChoices: string[],
   currentChoice: any,
   encryptedContextChoices: string[],
   setContextChoices: React.Dispatch<React.SetStateAction<any[]>>,
@@ -32,10 +32,11 @@ export default function BallotComp() {
   const [currentContextIndex, setCurrentContextIndex] = useState(0);
   const [ballotData, setBallotData] = useState<Ballot | null>(null);
   const [currentChoice, setCurrentChoice] = useState("na");
-  const [contextChoices, setContextChoices] = useState<any[]>([]);
+  const [contextChoices, setContextChoices] = useState<string[]>([]);
   const [ballotItems, setBallotItems] = useState<string[]>([]);
   const [encryptedContextChoices, setEncryptedContextChoices] = useState<string[]>([]);
   var endOfBallot = false;
+  const [tempCurrChoice, setTempCurrChoice] = useState("");
 
   const handleCurrChoice = (currChoice: any) =>  {
     console.log(currChoice);
@@ -67,11 +68,13 @@ export default function BallotComp() {
       setCurrentItemIndex(currentItemIndex + 1);
       setCurrentContextIndex(currentContextIndex + 1);
       handleAddChoice();
+      setCurrentChoice('na');
     } else if (currentSectionIndex < ballotData.sections.length - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
       setCurrentContextIndex(currentContextIndex + 1);
       setCurrentItemIndex(0);
       handleAddChoice();
+      setCurrentChoice('na');
     } else {
       endOfBallot = true;
       ballotData.header.title = 'Ballot Review';
@@ -79,6 +82,7 @@ export default function BallotComp() {
       ballotData.header.instructions = 'Please review your ballot and ensure the selections are accurate';
       console.log('Made it to else in handleNext')
       handleAddChoice();
+      setCurrentChoice('na');
       setCurrentItemIndex(currentItemIndex + 1);
       //renderCurrentItem();
     }
@@ -131,7 +135,7 @@ export default function BallotComp() {
 
   const handleAddChoice = () => {
       setContextChoices(() => {
-      if (!contextChoices[currentContextIndex]) {
+      if (!contextChoices[currentContextIndex] && currentChoice != 'na') {
               console.log(currentChoice);
               console.log([...contextChoices, currentChoice]);
               return [...contextChoices, currentChoice];
@@ -139,7 +143,7 @@ export default function BallotComp() {
               contextChoices[currentContextIndex] = currentChoice;
               console.log(currentChoice);
               console.log([...contextChoices]);
-              return [...contextChoices];
+              return contextChoices;
             }
     });
   };

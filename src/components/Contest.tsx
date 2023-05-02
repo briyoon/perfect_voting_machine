@@ -12,7 +12,8 @@ const Contest: FunctionComponent<ContestProps> = ({ contest }) => {
     
     const handleCurrChoice = (choice: any) => {
         console.log(choice);
-        if(contest.contestChoices.indexOf(choice) === -1) setCurrentChoice(choice);
+        //if(contest.contestChoices.indexOf(choice) === -1)
+         setCurrentChoice(choice);
     }
 
     const handleWriteIn = (event: any) => {
