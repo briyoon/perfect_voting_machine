@@ -30,7 +30,7 @@ export default function BallotComp() {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
   const [ballotData, setBallotData] = useState<Ballot | null>(null);
-  const [currentChoice, setCurrentChoice] = useState("hello");
+  const [currentChoice, setCurrentChoice] = useState("");
   const [contextChoices, setContextChoices] = useState<any[]>([]);
   const [ballotItems, setBallotItems] = useState<string[]>([]);
   const [encryptedContextChoices, setEncryptedContextChoices] = useState<string[]>([]);
@@ -40,7 +40,7 @@ export default function BallotComp() {
     console.log(currChoice);
     setCurrentChoice(currChoice);
   };
-  
+
   useEffect(() => {
     const fetchBallot = async () => {
       const response = await fetch('src/assets/example_ballot.json');
@@ -57,8 +57,6 @@ export default function BallotComp() {
 
   const currentSection = ballotData.sections[currentSectionIndex];
   const currentItem = currentSection.items[currentItemIndex];
-
-  
 
   const handleNext = () => {
     if (currentItemIndex < currentSection.items.length - 1) {
@@ -96,7 +94,7 @@ export default function BallotComp() {
     } else if (currentItem.contest) {
       if (ballotItems.indexOf(currentItem.contest.contestName) === -1)
         handleAddBallotItem(currentItem.contest.contestName);
-      return <Contest contest={currentItem.contest} />;
+      return <Contest contestData={currentItem.contest} />;
     } else if (currentItem.proposition) {
       if (ballotItems.indexOf(currentItem.proposition.propName) === -1)
         handleAddBallotItem(currentItem.proposition.propName);
@@ -126,26 +124,24 @@ export default function BallotComp() {
   const handleAddChoice = () => {
       setContextChoices(() => {
       if (!contextChoices[currentItemIndex]) {
-              console.log(currentChoice);
-              console.log([...contextChoices, currentChoice]);
-              return [...contextChoices, currentChoice];
-            } else {
-              contextChoices[currentItemIndex] = currentChoice;
-              console.log(currentChoice);
-              console.log([...contextChoices]);
-              return [...contextChoices];
-            }
+        console.log(currentChoice);
+        console.log([...contextChoices, currentChoice]);
+        return [...contextChoices, currentChoice];
+      } else {
+        contextChoices[currentItemIndex] = currentChoice;
+        console.log(currentChoice);
+        console.log([...contextChoices]);
+        return [...contextChoices];
+      }
     });
   };
 
-
   const handleKeyPress = (event: React.KeyboardEvent) => {
+    event.preventDefault();
     if (event.key === "ArrowLeft") {
       handlePrev();
-      event.preventDefault();
     } else if (event.key === "ArrowRight") {
       handleNext();
-      event.preventDefault();
     }
   };
 
@@ -165,13 +161,14 @@ export default function BallotComp() {
   //   });
   // };
 
- 
+
 
   return (
     <div
       className="bg-gradient-to-tr from-green-500 to-blue-300 min-h-screen flex items-center justify-center"
-      tabIndex={0}
+      tabIndex={-1}
       onKeyDown={handleKeyPress}
+      // onMouseDown={(e) => {e.preventDefault()}}
     >
       <img src={logo} alt="Logo" className="absolute bottom-4 right-4 h-16 w-auto" />
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">
