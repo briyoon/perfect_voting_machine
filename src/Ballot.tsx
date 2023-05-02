@@ -8,6 +8,7 @@ import Approval from './components/Approval';
 import { encryptData } from './utils/crypto';
 import PrinterDriver from './components/PrinterDriver';
 import logo from './Images/logo.png';
+import {getDataFromFile} from './InputParser'
 
 type BallotContextType = {
   contextChoices: string[],
@@ -41,15 +42,15 @@ export default function BallotComp() {
     console.log(currChoice);
     setCurrentChoice(currChoice);
   };
-  
+
   useEffect(() => {
     const fetchBallot = async () => {
-      const response = await fetch('src/assets/example_ballot.json');
+      const response = await getDataFromFile();
       const data = await response.json();
       setBallotData(data);
     };
 
-    fetchBallot();
+    fetchBallot()
 
   }, []);
 
@@ -59,8 +60,6 @@ export default function BallotComp() {
 
   const currentSection = ballotData.sections[currentSectionIndex];
   const currentItem = currentSection.items[currentItemIndex];
-
-  
 
   const handleNext = () => {
     if (currentItemIndex < currentSection.items.length - 1) {
@@ -105,7 +104,7 @@ export default function BallotComp() {
     } else if (currentItem.contest) {
       if (ballotItems.indexOf(currentItem.contest.contestName) === -1)
         handleAddBallotItem(currentItem.contest.contestName);
-      return <Contest contest={currentItem.contest} />;
+      return <Contest contestData={currentItem.contest} />;
     } else if (currentItem.proposition) {
       if (ballotItems.indexOf(currentItem.proposition.propName) === -1)
         handleAddBallotItem(currentItem.proposition.propName);
@@ -147,14 +146,12 @@ export default function BallotComp() {
     });
   };
 
-
   const handleKeyPress = (event: React.KeyboardEvent) => {
+    event.preventDefault();
     if (event.key === "ArrowLeft") {
       handlePrev();
-      event.preventDefault();
     } else if (event.key === "ArrowRight") {
       handleNext();
-      event.preventDefault();
     }
   };
 
@@ -174,13 +171,14 @@ export default function BallotComp() {
   //   });
   // };
 
- 
+
 
   return (
     <div
       className="bg-gradient-to-tr from-green-500 to-blue-300 min-h-screen flex items-center justify-center"
-      tabIndex={0}
+      tabIndex={-1}
       onKeyDown={handleKeyPress}
+      // onMouseDown={(e) => {e.preventDefault()}}
     >
       <img src={logo} alt="Logo" className="absolute bottom-4 right-4 h-16 w-auto" />
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">

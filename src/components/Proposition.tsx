@@ -1,55 +1,75 @@
 import type { FunctionComponent } from "react";
-import { useContext, useState, useEffect, useRef } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import { BallotContext } from "@/Ballot";
 
 interface PropositionProps {
-    proposition: Proposition
+  proposition: Proposition;
 }
 
 const Proposition: FunctionComponent<PropositionProps> = ({ proposition }) => {
+  const { currentChoice, setCurrentChoice } = useContext(BallotContext);
 
-    const { currentChoice, setCurrentChoice } = useContext(BallotContext);
-    const inputRef = useRef<HTMLElement | null | any>(null);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [focusedIndex, setFocusedIndex] = useState<number>(0);
+  const formRef = useRef<HTMLFormElement | null>(null);
 
-    useEffect(() => {
-        if (inputRef.current) {
-            inputRef.current.focus();
-        }
-    }, []);
-    
-    const handleCurrChoice = (choice: any) => {
-        console.log(choice);
-        setCurrentChoice(choice);
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+    const { key } = event;
+    if (key === "ArrowUp" && focusedIndex > 0) {
+      setFocusedIndex((prevIndex) => prevIndex - 1);
+    } else if (
+      key === "ArrowDown" &&
+      focusedIndex < proposition.propChoices.length - 1
+    ) {
+      setFocusedIndex((prevIndex) => prevIndex + 1);
+    } else if (key === "Enter") {
+      event.preventDefault();
+      if (focusedIndex < proposition.propChoices.length) {
+        const selectedChoiceIndex = focusedIndex;
+        setSelectedOption(proposition.propChoices[selectedChoiceIndex].option);
+      }
     }
+  };
 
-    return (
-        <>
-            <h2 className="text-2xl font-bold mb-4">{proposition.propName}</h2>
-            <p className="mb-4">{proposition.propDescription}</p>
-            <ul>
-            {proposition.propChoices.map((choice, index) => {
-                var curRef;
-                var checked;
-                if (choice.option === currentChoice) {
-                    curRef = inputRef;
-                    checked = true;
-                }
-                else {
-                    curRef = null;
-                    checked = false;
-                }
-                console.log("[CONTEST] candidate name: ", choice.option)
-                return(
-                <li onClick = {() => handleCurrChoice(choice.option)} key={index} className="mb-2">
-                <label className="inline-flex items-center">
-                    <input type="radio" name={`proposition_${index}`} value={index} className="form-radio h-4 w-4 text-indigo-600" />
-                    <span className="ml-2">{choice.option}</span>
-                </label>
-                </li>
-                )})}
-            </ul>
-        </>
-    );
-}
+  const handleCurrChoice = (choice: string) => {
+    setSelectedOption(choice);
+    setCurrentChoice(choice);
+  };
+
+  useEffect(() => {
+    formRef.current?.focus();
+  }, []);
+
+  return (
+    <form onKeyDown={handleKeyDown} ref={formRef} tabIndex={0}>
+      <h2 className="text-2xl font-bold mb-4">{proposition.propName}</h2>
+      <p className="mb-4">{proposition.propDescription}</p>
+      <ul>
+        {proposition.propChoices.map((choice, index) => (
+          <li
+            onClick={(event) => {
+              event.preventDefault();
+              handleCurrChoice(choice.option);
+            }}
+            key={index}
+            className={`mb-2 ${focusedIndex === index ? "bg-gray-200" : ""}`}
+          >
+            <label className="inline-flex items-center">
+              <input
+                type="radio"
+                name={`proposition_${index}`}
+                value={index}
+                className="form-radio h-4 w-4 text-indigo-600"
+                checked={selectedOption === choice.option}
+                onChange={(event) => setSelectedOption(choice.option)}
+              />
+              <span className="ml-2">{choice.option}</span>
+            </label>
+          </li>
+        ))}
+      </ul>
+    </form>
+  );
+};
 
 export default Proposition;
