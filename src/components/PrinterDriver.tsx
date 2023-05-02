@@ -2,6 +2,7 @@ import * as React from 'react';
 import { FunctionComponent, useEffect, useRef } from "react";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ipcRenderer } from 'electron';
 
 interface PrinterDriverProps {
     ballotItems: string[],
@@ -31,8 +32,23 @@ const PrinterDriver: FunctionComponent<PrinterDriverProps> = ({ ballotItems, bal
         if (event.key === "Enter") {
           console.log('CONFIRMED');
           event.preventDefault();
-          downloadFile();
-          navigate(-1);
+          var itemData = ballotItems.map((item, index) => {
+            return {item: item, choice: ballotChoices[index]}
+          })
+
+          console.log(itemData)
+
+          ipcRenderer.send('save-object-to-file', itemData)
+
+          ipcRenderer.on('save-object-to-file-reply', (event, result) => {
+            console.log(result)
+            if (result.success) {
+              console.log('Object saved successfully!')
+            } else {
+              console.error('Error saving object:', result.error)
+            }
+            navigate(-2);
+          })
         } else if (event.key === "ArrowUp") {
           console.log('up pressed');
           event.preventDefault();
@@ -42,40 +58,10 @@ const PrinterDriver: FunctionComponent<PrinterDriverProps> = ({ ballotItems, bal
 
       //Stores in RAM until ENTER is pressed
       function uploadToFile() {
-        setFileContent(fileContent.concat(tempBallotChoices.sort(() => Math.random() - 0.5)));
+        setFileContent(fileContent.concat());
         //element.download = "ballotData.txt";
         //element.click();
       }
-
-      //Once ENTER is pressed it's brought to the system storage
-    function downloadFile() {
-        const fileUrl = 'ballotData.txt';
-        const xhr = new XMLHttpRequest();
-        xhr.open('HEAD', fileUrl, true);
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-              // file exists, do nothing
-              console.log('File already exists');
-            } else {
-              // file does not exist, create new one
-              const element = document.createElement("a");
-              const file = new Blob([fileContent], {type: 'text/plain'});
-              element.href = URL.createObjectURL(file);
-              element.download = "ballotData.txt";
-              for(let i = 0; i < ballotChoices.length; i++){
-                  const textNode = document.createTextNode(tempBallotChoices[i] + "");
-                  document.body.appendChild(textNode);
-              }
-              element.click();
-            }
-          }
-        };
-        xhr.send(null);
-    }
-      
-      
-
 
     const renderItems = () => {
         const items = [];

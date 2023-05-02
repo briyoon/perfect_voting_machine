@@ -58,3 +58,26 @@ interface Ballot {
   header: Header;
   sections: Section[];
 }
+
+// VOTE REVIEW
+
+interface ReviewBallot {
+  header: Header;
+  sections: ReviewSection[];
+}
+
+interface ReviewSection {
+  sectionName: string;
+  reviewItems: ReviewItem[];
+}
+
+interface ReviewItem {
+  contest?: {
+    contestName: string;
+    contestChoice: string;
+  }
+  proposition?: {
+    propName: string;
+    propChoice: string;
+  }
+}

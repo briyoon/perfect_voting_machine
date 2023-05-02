@@ -43,7 +43,7 @@ const Proposition: FunctionComponent<PropositionProps> = ({ proposition }) => {
   }, [currentChoice]);
 
   return (
-    <form onKeyDown={handleKeyDown} ref={formRef} tabIndex={0}>
+    <form onKeyDown={handleKeyDown} ref={formRef} tabIndex={-1}>
       <h2 className="text-2xl font-bold mb-4">{proposition.propName}</h2>
       <p className="mb-4">{proposition.propDescription}</p>
       <ul>

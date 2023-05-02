@@ -1,7 +1,8 @@
-import { app, BrowserWindow, shell, ipcMain } from 'electron'
+import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron'
 import { release } from 'node:os'
 import { join } from 'node:path'
 import { update } from './update'
+import fs from 'fs';
 
 // The built directory structure
 //
@@ -119,3 +120,25 @@ ipcMain.handle('open-win', (_, arg) => {
   }
 })
 
+ipcMain.on('save-object-to-file', (event, arg) => {
+  // Show a save dialog to the user
+  console.log(arg)
+  dialog.showSaveDialog({
+    title: 'Save Object',
+    defaultPath: './ballotData.json',
+    filters: [
+      { name: 'JSON', extensions: ['json'] }
+    ]
+  }).then(result => {
+    if (!result.canceled) {
+      // Write the object to the selected file
+      fs.writeFile(result.filePath, JSON.stringify(arg), err => {
+        if (err) {
+          event.reply('save-object-to-file-reply', { success: false, error: err })
+        } else {
+          event.reply('save-object-to-file-reply', { success: true })
+        }
+      })
+    }
+  })
+});
