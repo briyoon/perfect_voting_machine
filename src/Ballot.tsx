@@ -13,7 +13,7 @@ import {getDataFromFile} from './InputParser'
 type BallotContextType = {
   contextChoices: string[],
   currentChoice: any,
-  encryptedContextChoices: string[],
+  encryptedContextChoices: any[],
   setContextChoices: React.Dispatch<React.SetStateAction<any[]>>,
   setCurrentChoice: React.Dispatch<React.SetStateAction<any[]>>
 };
@@ -32,8 +32,8 @@ export default function BallotComp() {
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
   const [currentContextIndex, setCurrentContextIndex] = useState(0);
   const [ballotData, setBallotData] = useState<Ballot | null>(null);
-  const [currentChoice, setCurrentChoice] = useState("na");
-  const [contextChoices, setContextChoices] = useState<string[]>([]);
+  const [currentChoice, setCurrentChoice] = useState("");
+  const [contextChoices, setContextChoices] = useState<any[]>([]);
   const [ballotItems, setBallotItems] = useState<string[]>([]);
   const [encryptedContextChoices, setEncryptedContextChoices] = useState<string[]>([]);
   var endOfBallot = false;
@@ -66,13 +66,13 @@ export default function BallotComp() {
       setCurrentItemIndex(currentItemIndex + 1);
       setCurrentContextIndex(currentContextIndex + 1);
       handleAddChoice();
-      setCurrentChoice('na');
+      //setCurrentChoice('na');
     } else if (currentSectionIndex < ballotData.sections.length - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
       setCurrentContextIndex(currentContextIndex + 1);
       setCurrentItemIndex(0);
       handleAddChoice();
-      setCurrentChoice('na');
+      //setCurrentChoice('na');
     } else {
       endOfBallot = true;
       ballotData.header.title = 'Ballot Review';

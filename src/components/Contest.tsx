@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import { BallotContext } from "@/Ballot";
+import { useState, useRef, useEffect, useContext } from "react";
 
 interface ContestProps {
   contestData: Contest;
@@ -7,6 +8,7 @@ interface ContestProps {
 const Contest = ({ contestData }: ContestProps) => {
   const [selectedOption, setSelectedOption] = useState<String | null>(null);
   const [focusedIndex, setFocusedIndex] = useState(0);
+  const { currentChoice, setCurrentChoice } = useContext(BallotContext)
   const formRef = useRef<HTMLFormElement | null>(null);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
@@ -25,9 +27,15 @@ const Contest = ({ contestData }: ContestProps) => {
         setSelectedOption(
           contestData.contestChoices[selectedChoiceIndex].candidate.name
         );
+        console.log(contestData.contestChoices[selectedChoiceIndex].candidate.name)
+        handleCurrChoice(contestData.contestChoices[selectedChoiceIndex].candidate.name);
       }
     }
   };
+  const handleCurrChoice = (choice: any) => {
+    console.log(choice);
+    setCurrentChoice(choice);
+  }  
 
   useEffect(() => {
     formRef.current?.focus();

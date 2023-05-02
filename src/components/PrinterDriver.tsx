@@ -29,19 +29,12 @@ const PrinterDriver: FunctionComponent<PrinterDriverProps> = ({ ballotItems, bal
       };
 
       function uploadToFile() {
-        setFileContent(fileContent.concat(ballotChoices));
+        setFileContent(fileContent.concat(ballotChoices.sort(() => Math.random() - 0.5)));
         //element.download = "ballotData.txt";
         //element.click();
       }
 
-    //   function downloadFile() {
-    //     const element = document.createElement("a");
-    //     const fileContent = ballotChoices.join('\n'); // join the ballot choices with new lines
-    //     const file = new Blob([fileContent], {type: 'text/plain'}); // create a Blob with the ballot choices
-    //     element.href = URL.createObjectURL(file);
-    //     element.download = "ballotData.txt";
-    //     element.click();
-    //   }
+
     function downloadFile() {
         const fileUrl = 'ballotData.txt';
         const xhr = new XMLHttpRequest();
