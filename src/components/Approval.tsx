@@ -41,7 +41,7 @@ const Approval: FunctionComponent<ApprovalProps> = ({ approval }) => {
                     console.log("[CONTEST] candidate name: ", choice.candidate.name)
                     return(
                     <li onClick = {() => handleCurrChoice(choice.candidate.name)} key={index} className="mb-2">
-                        <input type="radio" name={`approval_${index}_${choice.candidate}}_${Math.random().toString(36).substr(2, 9)}`} value={index} className="form-radio h-4 w-4 text-indigo-600" />
+                        <input type="radio" name={`option`} value={index} className="form-radio h-4 w-4 text-indigo-600" />
                         <span> {choice.candidate.name} - {choice.candidate.party}</span>
                     </li>
                     )})}
