@@ -9,17 +9,66 @@ interface PrinterDriverProps {
 
 const PrinterDriver: FunctionComponent<PrinterDriverProps> = ({ ballotItems, ballotChoices }) => {
 
+    // const element = document.createElement("a");
+    // const fileContent = ballotChoices.join('\n'); // join the ballot choices with new lines
+    // const file = new Blob([fileContent], {type: 'text/plain'}); // create a Blob with the ballot choices
+    const [fileContent, setFileContent] = useState([""]);
+
     console.log('Inside BallotReview');
 
     const handleKeyPress = (event: React.KeyboardEvent) => {
         if (event.key === "Enter") {
           console.log('CONFIRMED');
           event.preventDefault();
-        } else if (event.key === "Enter") {
-          console.log('CONFIRMED');
+          downloadFile();
+        } else if (event.key === "ArrowUp") {
+          console.log('up pressed');
           event.preventDefault();
+          uploadToFile();
         }
       };
+
+      function uploadToFile() {
+        setFileContent(fileContent.concat(ballotChoices));
+        //element.download = "ballotData.txt";
+        //element.click();
+      }
+
+    //   function downloadFile() {
+    //     const element = document.createElement("a");
+    //     const fileContent = ballotChoices.join('\n'); // join the ballot choices with new lines
+    //     const file = new Blob([fileContent], {type: 'text/plain'}); // create a Blob with the ballot choices
+    //     element.href = URL.createObjectURL(file);
+    //     element.download = "ballotData.txt";
+    //     element.click();
+    //   }
+    function downloadFile() {
+        const fileUrl = 'ballotData.txt';
+        const xhr = new XMLHttpRequest();
+        xhr.open('HEAD', fileUrl, true);
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              // file exists, do nothing
+              console.log('File already exists');
+            } else {
+              // file does not exist, create new one
+              const element = document.createElement("a");
+              const file = new Blob([fileContent], {type: 'text/plain'});
+              element.href = URL.createObjectURL(file);
+              element.download = "ballotData.txt";
+              for(let i = 0; i < ballotChoices.length; i++){
+                  const textNode = document.createTextNode(ballotChoices[i] + "");
+                  document.body.appendChild(textNode);
+              }
+              element.click();
+            }
+          }
+        };
+        xhr.send(null);
+    }
+      
+      
 
     const renderItems = () => {
         const items = [];
