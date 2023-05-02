@@ -25,6 +25,7 @@ export const BallotContext = React.createContext<BallotContextType>({
   setCurrentChoice: (currChoice) => {},
 });
 
+
 export default function BallotComp() {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
@@ -39,7 +40,7 @@ export default function BallotComp() {
     console.log(currChoice);
     setCurrentChoice(currChoice);
   };
-
+  
   useEffect(() => {
     const fetchBallot = async () => {
       const response = await fetch('src/assets/example_ballot.json');
@@ -58,6 +59,8 @@ export default function BallotComp() {
   const currentSection = ballotData.sections[currentSectionIndex];
   const currentItem = currentSection.items[currentItemIndex];
 
+  
+
   const handleNext = () => {
     if (currentItemIndex < currentSection.items.length - 1) {
       setCurrentItemIndex(currentItemIndex + 1);
@@ -71,7 +74,10 @@ export default function BallotComp() {
       ballotData.header.title = 'Ballot Review';
       currentSection.sectionName = 'Review';
       ballotData.header.instructions = 'Please review your ballot and ensure the selections are accurate';
-      renderCurrentItem();
+      console.log('Made it to else in handleNext')
+      handleAddChoice();
+      setCurrentItemIndex(currentItemIndex + 1);
+      //renderCurrentItem();
     }
   };
 
@@ -105,6 +111,8 @@ export default function BallotComp() {
         handleAddBallotItem(currentItem.approval.approvalName);
       return <Approval approval={currentItem.approval} />;
     } else {
+      //console.log("Made it to renderCurrentItem()");
+      //return <BallotReview ballotItems={ballotItems} ballotChoices={contextChoices} />;
       return <div>Invalid item type</div>;
     }
   };
@@ -117,17 +125,17 @@ export default function BallotComp() {
   };
 
   const handleAddChoice = () => {
-    setContextChoices(() => {
+      setContextChoices(() => {
       if (!contextChoices[currentItemIndex]) {
-        console.log(currentChoice);
-        console.log([...contextChoices, currentChoice]);
-        return [...contextChoices, currentChoice];
-      } else {
-        contextChoices[currentItemIndex] = currentChoice;
-        console.log(currentChoice);
-        console.log([...contextChoices]);
-        return [...contextChoices];
-      }
+              console.log(currentChoice);
+              console.log([...contextChoices, currentChoice]);
+              return [...contextChoices, currentChoice];
+            } else {
+              contextChoices[currentItemIndex] = currentChoice;
+              console.log(currentChoice);
+              console.log([...contextChoices]);
+              return [...contextChoices];
+            }
     });
   };
 
@@ -142,7 +150,7 @@ export default function BallotComp() {
     }
   };
 
-    // const handleAddChoice = (choice: any) => {
+  // const handleAddChoice = (choice: any) => {
   //   setContextChoices((prevState) => {
   //     let updatedState;
   //     if (contextChoices.indexOf(choice) === -1) {
@@ -158,6 +166,8 @@ export default function BallotComp() {
   //   });
   // };
 
+ 
+
   return (
     <div
       className="bg-gradient-to-tr from-green-500 to-blue-300 min-h-screen flex items-center justify-center"
@@ -165,14 +175,14 @@ export default function BallotComp() {
       onKeyDown={handleKeyPress}
     >
       <img src={logo} alt="Logo" className="absolute bottom-4 right-4 h-16 w-auto" />
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">
-        <div className="mb-4">
-          <p className="font-bold text-black text-center text-2xl">{ballotData.header.title}</p>
-          <p className="text-black text-center text-lg">{`Current section: ${currentSection.sectionName}`}</p>
-          <p className="text-black text-center text-lg">{ballotData.header.instructions}</p>
-        </div>
-        <hr className="border-t-2 border-gray-200 mb-4 mx-auto w-2/3" />
-        <div className="flex-grow w-full h-full flex flex-col items-center">
+        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">
+          <div className="mb-4">
+            <p className="font-bold text-black text-center text-2xl">{ballotData.header.title}</p>
+            <p className="text-black text-center text-lg">{`Current section: ${currentSection.sectionName}`}</p>
+            <p className="text-black text-center text-lg">{ballotData.header.instructions}</p>
+          </div>
+          <hr className="border-t-2 border-gray-200 mb-4 mx-auto w-2/3" />
+          <div className="flex-grow w-full h-full flex flex-col items-center">
           <BallotContext.Provider
             value={{
               contextChoices,
