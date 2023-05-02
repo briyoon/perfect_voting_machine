@@ -35,11 +35,12 @@ const Contest = ({ contestData }: ContestProps) => {
   const handleCurrChoice = (choice: any) => {
     console.log(choice);
     setCurrentChoice(choice);
-  }  
+  }
 
   useEffect(() => {
+    setSelectedOption(currentChoice)
     formRef.current?.focus();
-  }, []);
+  }, [currentChoice]);
 
   return (
     <form
