@@ -8,6 +8,7 @@ import Approval from './components/Approval';
 import { encryptData } from './utils/crypto';
 import PrinterDriver from './components/PrinterDriver';
 import logo from './Images/logo.png';
+import {getDataFromFile} from './InputParser'
 
 type BallotContextType = {
   contextChoices: string[],
@@ -44,12 +45,12 @@ export default function BallotComp() {
   
   useEffect(() => {
     const fetchBallot = async () => {
-      const response = await fetch('src/assets/example_ballot.json');
+      const response = await getDataFromFile();
       const data = await response.json();
       setBallotData(data);
     };
 
-    fetchBallot();
+    fetchBallot()
 
   }, []);
 
