@@ -82,6 +82,7 @@ export default function BallotComp() {
       handleAddChoice();
       setCurrentChoice('na');
       setCurrentItemIndex(currentItemIndex + 1);
+      setCurrentContextIndex(currentContextIndex + 1);
       //renderCurrentItem();
     }
   };
@@ -135,16 +136,16 @@ export default function BallotComp() {
 
   const handleAddChoice = () => {
       setContextChoices(() => {
-      if (!contextChoices[currentContextIndex] && currentChoice != 'na') {
+      if ((!contextChoices[currentContextIndex] || currentChoice == "") &&  contextChoices.length < 6) {
               console.log(currentChoice);
               console.log([...contextChoices, currentChoice]);
-              setCurrentChoice('na');
+              setCurrentChoice(currentChoice);
               return [...contextChoices, currentChoice];
             } else {
               contextChoices[currentContextIndex] = currentChoice;
               console.log(currentChoice);
               console.log([...contextChoices]);
-              setCurrentChoice('na');
+              setCurrentChoice(currentChoice);
               return contextChoices;
             }
     });
