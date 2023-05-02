@@ -1,6 +1,7 @@
 import * as React from 'react';
-import type { FunctionComponent } from "react";
+import { FunctionComponent, useEffect, useRef } from "react";
 import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface PrinterDriverProps {
     ballotItems: string[],
@@ -16,11 +17,21 @@ const PrinterDriver: FunctionComponent<PrinterDriverProps> = ({ ballotItems, bal
 
     console.log('Inside BallotReview');
 
+    const navigate = useNavigate();
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (containerRef.current) {
+            containerRef.current.focus();
+        }
+    }, []);
+
     const handleKeyPress = (event: React.KeyboardEvent) => {
         if (event.key === "Enter") {
           console.log('CONFIRMED');
           event.preventDefault();
           downloadFile();
+          navigate(-1);
         } else if (event.key === "ArrowUp") {
           console.log('up pressed');
           event.preventDefault();
@@ -63,6 +74,7 @@ const PrinterDriver: FunctionComponent<PrinterDriverProps> = ({ ballotItems, bal
       
       
 
+
     const renderItems = () => {
         const items = [];
         for(let i = 0; i < ballotItems.length; i++){
@@ -84,16 +96,19 @@ const PrinterDriver: FunctionComponent<PrinterDriverProps> = ({ ballotItems, bal
 
     return (
         <>
-            <div className="bg-gradient-to-tr from-green-500 to-blue-300 min-h-screen flex items-center justify-center" tabIndex={0} onKeyDown={handleKeyPress}>
-                <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">
-                    <div className="mb-4">
-                        <p className="font-bold text-black text-center text-2xl">Ballot Summary</p>
-                        <p className="text-black text-center text-lg">Please review your ballot and ensure the selections are accurate</p>
-                    </div>
-                    <ul>
-                        {renderItems()}
-                    </ul>
+            <div
+                ref={containerRef}
+                className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl"
+                onKeyDown={handleKeyPress}
+                tabIndex={0}
+            >
+                <div className="mb-4">
+                    <p className="font-bold text-black text-center text-2xl">Ballot Summary</p>
+                    <p className="text-black text-center text-lg">Please review your ballot and ensure the selections are accurate</p>
                 </div>
+                <ul>
+                    {renderItems()}
+                </ul>
             </div>
         </>
     );

@@ -77,7 +77,7 @@ export default function BallotComp() {
       endOfBallot = true;
       ballotData.header.title = 'Ballot Review';
       currentSection.sectionName = 'Review';
-      ballotData.header.instructions = 'Please review your ballot and ensure the selections are accurate, press ENTER to confirm your ballot is accurate';
+      ballotData.header.instructions = 'Please review your ballot and ensure the selections are accurate, press ENTER to confirm your ballot is accurate. Press the left arrow key to go back to your ballot.';
       console.log('Made it to else in handleNext')
       handleAddChoice();
       setCurrentChoice('na');
@@ -182,9 +182,8 @@ export default function BallotComp() {
       className="bg-gradient-to-tr from-green-500 to-blue-300 min-h-screen flex items-center justify-center"
       tabIndex={-1}
       onKeyDown={handleKeyPress}
-      // onMouseDown={(e) => {e.preventDefault()}}
     >
-      <img src={logo} alt="Logo" className="absolute bottom-4 right-4 h-16 w-auto" />
+      <img src={logo} alt="Logo" className="fixed bottom-4 right-4 h-16 w-auto fixed" />
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">
           <div className="mb-4">
             <p className="font-bold text-black text-center text-2xl">{ballotData.header.title}</p>
@@ -205,11 +204,13 @@ export default function BallotComp() {
             {renderCurrentItem()}
           </BallotContext.Provider>
         </div>
-        <div className="text-center mt-4">
-          <p className="text-gray-400">
-            To navigate the voting machine, please use the left and right arrow keys to move between pages, the up and down arrow keys to highlight your preferred candidate, and press the Enter key to confirm your selection.
-          </p>
-        </div>
+        {currentSection.sectionName !== 'Review' && (
+          <div className="text-center mt-4">
+            <p className="text-gray-400">
+              To navigate the voting machine, please use the left and right arrow keys to move between pages, the up and down arrow keys to highlight your preferred candidate, and press the Enter key to confirm your selection.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
